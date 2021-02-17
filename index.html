@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/7a4b529361.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <h1 class="header__h1">ToDo List</h1>
+            <form action="" class="search-form">
+                <input type="text" class="search-form__text-input" placeholder="Search for task...">
+
+                <p class="search-form__p">Choose sort options</p>
+                <input type="radio" name="search-radio" class="search-form__radio" id="radio1" value='byDate' checked>
+                <label for="radio1" class="search-form__label">By date</label>
+
+                <input type="radio" name="search-radio" class="search-form__radio" id="radio2" value="byImportance">
+                <label for="radio2" class="search-form__label">By Importance</label>
+
+                <p class="search-form__p">State of progress</p>
+                <select name="select" id="select" class="search-form__select">
+                    <option value="all">All</option>
+                    <option value="inProgress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+            </form>
+        </header>
+
+        <main class="toDo">
+            <div class="toDO__underline"></div>
+            <ul class="toDo__ul">
+                
+            </ul>
+        </main>
+
+        <aside class="aside-content">
+            <div class="add-task">
+                <h2 class="add-task__h2">Add your task</h2>
+                <form action="" class="add-task__form">
+                    <input id="add-text" type="text" class="add-task__text-input" placeholder="Enter the task...">
+                    <p class="add-task__error">Error</p>
+                    <label for="add-checkbox" class="add-task__label">Select if task is important</label>
+                    <input id="add-checkbox" type="checkbox" class="add-task__importance-input">
+                    <button class="add-task__add-button">Add task</button>
+                </form>
+            </div>
+
+            <div class="tasks-counter">
+                <p class="task-counter__progress-number">0</p>
+                <p class="task-counter__in-progress">In progress</p>
+                <p class="task-counter__important-number">0</p>
+                <p class="task-counter__important">Important</p>
+                <p class="task-counter__all-number">0</p>
+                <p class="task-counter__all">All</p>
+
+                
+
+            </div>
+
+            <div class="color-select">
+                <div class="color-select__ligt"></div>
+                <div class="color-select__dark"></div>
+            </div>
+        </aside> 
+    </div>
+    
+    <script src="main.js"> </script>
+</body>
+</html>
