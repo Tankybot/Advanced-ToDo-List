@@ -285,8 +285,9 @@ body
 
 .tasks-counter
     display: flex
-    flex-wrap: wrap
     flex-direction: column
+    justify-content: center
+    align-items: center
     background-color: var(--second-color)
     width: 90%
     height: 50%
@@ -299,21 +300,27 @@ body
     font-weight: bold
     letter-spacing: 1px
 
+.task-counter__underline
+    height: 3px
+    background-color: var(--main-color)
+    width: 55%
+    margin-bottom: 20px
+    margin-top: 2px
+
+.task-counter__underline:first-of-type
+    width: 70%
+    height: 4px
 
 .task-counter__progress-number
     font-size: 44px
     color: #32CD32
-    margin-bottom: 5px
-    margin-top: 20px
 
 .task-counter__in-progress
     font-size: 22px
     text-transform: uppercase
-    margin-bottom: 20px
 
 .task-counter__important-number
     color: 	#FFA500
-    margin-bottom: 5px
     font-size: 26px
 
 .task-counter__important
@@ -324,7 +331,6 @@ body
     color: #008000
     margin-bottom: 5px
     font-size: 26px
-    margin-top: 20px
     color: 	#505050
 
 .task-counter__all

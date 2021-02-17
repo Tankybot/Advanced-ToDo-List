@@ -423,12 +423,16 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   background-color: var(--second-color);
   width: 90%;
   height: 50%;
@@ -443,22 +447,31 @@ body {
   letter-spacing: 1px;
 }
 
+.task-counter__underline {
+  height: 3px;
+  background-color: var(--main-color);
+  width: 55%;
+  margin-bottom: 20px;
+  margin-top: 2px;
+}
+
+.task-counter__underline:first-of-type {
+  width: 70%;
+  height: 4px;
+}
+
 .task-counter__progress-number {
   font-size: 44px;
   color: #32CD32;
-  margin-bottom: 5px;
-  margin-top: 20px;
 }
 
 .task-counter__in-progress {
   font-size: 22px;
   text-transform: uppercase;
-  margin-bottom: 20px;
 }
 
 .task-counter__important-number {
   color: #FFA500;
-  margin-bottom: 5px;
   font-size: 26px;
 }
 
@@ -470,7 +483,6 @@ body {
   color: #008000;
   margin-bottom: 5px;
   font-size: 26px;
-  margin-top: 20px;
   color: #505050;
 }
 
