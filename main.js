@@ -5,40 +5,99 @@ const $searchRadioByImportance = document.querySelector('#radio2')
 const $searchSelect = document.querySelector('.search-form__select');
 //TASK AREA
 const $tasksArea = document.querySelector('.toDo__ul');
+const $deleteAllButton = document.querySelector('.toDo__delete-all');
 //ADD TASK FORM
 const $addTextInput = document.querySelector('.add-task__text-input');
 const $importantCheckbox = document.querySelector('.add-task__importance-input');
 const $addError = document.querySelector('.add-task__error');
 const $addTaskBtn = document.querySelector('.add-task__add-button');
-//TASK COUNTERZZ
+//TASK COUNTER
 const $progressNumber = document.querySelector('.task-counter__progress-number');
 const $importantNumber = document.querySelector('.task-counter__important-number');
 const $allNumber = document.querySelector('.task-counter__all-number');
+//COLOR CHANGE
+const $ligtButton = document.querySelector('.color-select__ligt');
+const $darkButton  = document.querySelector('.color-select__dark');
+//EDIT POPUP
+const $popup = document.querySelector('.popup');
+const $popupInput = document.querySelector('.popup__input');
+const $popupAccept  = document.querySelector('.popup__accept');
+const $popupCancel = document.querySelector('.popup__cancel');
+const $popupError = document.querySelector('.popup__error');
+
 //GLOBAL LET VARIABLES 
 
 let $progressAmount = 0;     // A number of tasks not done yet
 let $importantAmount = 0;      // number of important tasks
 let $allAmount = 0;         //number of all tasks 
+let root = document.documentElement;
 
-/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////// 
 
 //ADD EVENT LISTENERS
 
 const startDOMEvenets = () => {
     $addTaskBtn.addEventListener('click', e => {
         e.preventDefault();
-        checkIfNotEmpty($addTextInput.value, $addError);
+        const taskValue = $addTextInput.value
+        if(checkIfNotEmpty(taskValue, $addError)){
+            addNewTask($tasksArea, taskValue);
+            clearInput($addTextInput)
+        };
+        
     });
     $tasksArea.addEventListener('click', event => {
         deleteTask(event, $tasksArea);
         turnImportant(event);
         turnDone(event);
+        editTask(event);
     });
-    $searchRadioByImportance.addEventListener('click', searchStart)
-    $searchRadioByDate.addEventListener('click', searchStart)
-    $searchInputText.addEventListener('change', searchStart)
-
+    $popupAccept.addEventListener('click', e => {
+        e.preventDefault();
+        repleceTask($popupInput)
+    });
+    $searchRadioByImportance.addEventListener('click', searchStart);
+    $searchRadioByDate.addEventListener('click', searchStart);
+    $searchInputText.addEventListener('keyup', searchStart);
+    $ligtButton.addEventListener('click', changeOnLight);
+    $darkButton.addEventListener('click', changeOnDark);
+    $deleteAllButton.addEventListener('click', deleteAllTasks);
+    $popupCancel.addEventListener('click', closePopup);
 };
+
+
+//                          GLOBAL FUNCTIONS 
+// Checking if input is not empty
+
+const checkIfNotEmpty = (taskValue, error)=> {
+    if(taskValue === ''){
+        error.classList.add('visible');
+        error.textContent = 'Enter the task!';
+    } else {
+        error.classList.remove('visible');
+        return true;
+    };
+};
+
+//CLEARING INPUT
+const clearInput = (input) => input.value = ''
+
+//SHOW ITEM
+const showItem = (item) => {
+    item.classList.add('visible');
+}
+
+//HIDE ITEM
+const hideItem = (item) => {
+    item.classList.remove('visible');
+};
+
+//CAPITALIZE FIRST LETTER IN TEXT
+const capitalizeFirstLetter = (text) => {
+    const newText = text.charAt(0).toUpperCase() + text.slice(1)
+    return newText;
+};
+
 
 //                          ADDING NEW TASK FORM
 // CREATING NEW TASK 
@@ -55,12 +114,13 @@ const addNewTask = (taskArea, taskValue) => {
     $allAmount++;
     countTasks();
     searchStart();
+    showDeleteAllButton();
 };
 
 const setTaskInnerHtml = (newTask, taskValue) => {
     newTask.innerHTML = `
     <div class="task">
-        <p class="task__text">${taskValue}</p>
+        <p class="task__text">${capitalizeFirstLetter(taskValue)}</p>
         <p class="task__date">${setTime()}</p>
     </div>
     <div class="button-box">
@@ -90,18 +150,6 @@ const setTime = () => {
     return dateString
 };
 
-// Checking if add input area is not empty 
-
-const checkIfNotEmpty = (taskValue, error)=> {
-    if(taskValue === ''){
-        error.classList.add('add-task__error--visible');
-        error.textContent = 'Enter the task!';
-    } else {
-        addNewTask($tasksArea, taskValue);
-        clearAddInput(taskValue);
-        error.classList.remove('add-task__error--visible');
-    };
-};
 
 //checking if Important was selected in Adding task form
 
@@ -114,9 +162,16 @@ const checkIfImportant  = (newTask, checkbox) => {
     };
 };
 
-// Clearing input value in add section
 
-const clearAddInput = () => $addTextInput.value = ''
+//                          DELETING ALL TASKS 
+const deleteAllTasks = () => {
+    $tasksArea.innerHTML = '';
+    $progressAmount = 0 ;
+    $allAmount = 0;
+    $importantAmount = 0;
+    countTasks();
+    showDeleteAllButton()
+};
 
 
 //                           TASK COUNTER
@@ -140,6 +195,7 @@ const deleteTask = (event, parent) => {
             deleteTaskFromCounter(deletedTask);
             parent.removeChild(deletedTask);
         };
+        showDeleteAllButton();
     };
 
 //checking type 
@@ -215,16 +271,24 @@ const turnDone = (event) => {
     countTasks()
     searchStart()
 };
+//EDIT BUTTON 
+const editTask = event => {
+    if(event.target.closest('button').classList.contains(`button-box__edit-button`)){
+        const editedTask = event.target.closest('li');
+        editedTask.dataset.editProgress = 'inProgress';
+        openPopup()
+    };
+};
 
 
 
-//                                               SEARCH ENGINE
+//                                  SEARCH ENGINE
 //Start searching 
 const searchStart = () => {
     const allTasks = document.querySelectorAll('.toDo__li')
     checkRadioOption(allTasks);
     checkSelectOption(allTasks);
-    searchByInputText(allTasks);
+    CheckTextInput($searchInputText);
 };
 
 // Checking which RADIO option is checked
@@ -244,6 +308,13 @@ const checkSelectOption = allTasks => {
         searchDoneOnly(allTasks);
     } else {
         searchAll(allTasks);
+    };
+};
+
+//Checking if input text is not empty 
+const CheckTextInput = (textInput) => {
+    if(textInput !== ''){
+        searchByInputText(textInput);
     };
 };
 
@@ -306,19 +377,101 @@ const searchAll = allTasks => {
 };
 
 //Search by input text
-const searchByInputText = allTasks => {
-    const searchInputValue = $searchInputText.value.toUpperCase()
-    const allTaskTexts = document.querySelectorAll('.task__text')
-    if(allTasks.length > 1){
-        for(let i=0; i<=allTasks.length; i++){
-            if(!(allTaskTexts[i].innerText.toUpperCase().includes(searchInputValue))){
-                allTasks[i].classList.add('toDo__li--hidden');
-            };
-        };
-    };
+const searchByInputText = (textInput) => {
+    const searchInputValue = textInput.value.toUpperCase();
+    const allTaskTexts = document.querySelectorAll('.task__text');
+
+    allTaskTexts.forEach(function (text){
+        if(!(text.innerText.toUpperCase().includes(searchInputValue))){
+            text.parentElement.parentElement.classList.add('toDo__li--hidden-textInput');
+        }else {
+            text.parentElement.parentElement.classList.remove('toDo__li--hidden-textInput');
+        }
+    });
 };
 
 
+//                             CHANGING COLOR 
+
+const changeOnLight = () => {
+    root.style.setProperty('--main-color', '#ADD8E6');
+    root.style.setProperty('--second-color', '#F5F5F5');
+    root.style.setProperty('--border-color', 'rgb(60, 87, 177)');
+    root.style.setProperty('--button-color', 'rgb(118, 144, 233)');
+    root.style.setProperty('--fourth-color', 'rgb(88, 121, 230)');
+    root.style.setProperty('--font-color', 'black');
+    root.style.setProperty('--gradient-color', 'rgba(70,166,252)');
+    root.style.setProperty('--input-color', 'white');
+    root.style.setProperty('--todobutton-color', 'rgb(239, 239, 239)');
+    root.style.setProperty('--body-color', 'white');
+    root.style.setProperty('--progress-color', '#32CD32')
+};
+
+const changeOnDark = () => {
+    console.log('ok')
+    root.style.setProperty('--main-color', '#888888');
+    root.style.setProperty('--second-color', '#B8B8B8');
+    root.style.setProperty('--border-color', 'black');
+    root.style.setProperty('--button-color', '#686868');
+    root.style.setProperty('--fourth-color', '#787878');
+    root.style.setProperty('--font-color', 'black');
+    root.style.setProperty('--gradient-color', '#585858');
+    root.style.setProperty('--input-color', '#E8E8E8');
+    root.style.setProperty('--todobutton-color', '#E8E8E8');
+    root.style.setProperty('--body-color', '#E8E8E8');
+    root.style.setProperty('--progress-color', '#008000')
+    root.style.setProperty('--popunderline-color', '#585858')
+};
+
+//                                EDITING TASK 
+//Closing popup 
+const closePopup = () => {  
+    hideItem($popup);
+    clearInput($popupInput);
+    removeEditData();
+};
+
+//Removing data edit progress 
+const removeEditData = () => {
+    const allTasks = document.querySelectorAll('.toDo__li')
+    allTasks.forEach(function (element) {
+        if(element.dataset.editProgress === 'inProgress') {
+            element.dataset.editProgress = null;
+        }; 
+    });
+};
+
+//Opening popup
+const openPopup = () => {
+    showItem($popup)
+};
+
+//Replecing Task content
+
+const repleceTask = (popupInput) => {
+    const allTasks = document.querySelectorAll('.toDo__li')
+    const newTask = popupInput.value 
+    if(checkIfNotEmpty(newTask, $popupError)){
+        allTasks.forEach(function (element){
+            if(element.dataset.editProgress === 'inProgress') {
+                element.childNodes[1].childNodes[1].innerText = capitalizeFirstLetter(newTask);
+                element.dataset.editProgress = null;
+            };   
+        });
+
+        closePopup();
+    };
+};
+
+//                  Show and hide delete all button
+
+const showDeleteAllButton = () => {
+    if($allAmount >= 1){
+        showItem($deleteAllButton);
+    } else {
+        hideItem($deleteAllButton);
+    };
+};
 
 
 

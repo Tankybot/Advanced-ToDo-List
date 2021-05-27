@@ -15,7 +15,7 @@
         <header class="header">
             <h1 class="header__h1">ToDo List</h1>
             <form action="" class="search-form">
-                <input type="text" class="search-form__text-input" placeholder="Search for task...">
+                <input type="text" class="search-form__text-input" placeholder="Search for task..." onfocus="searchStart()">
 
                 <p class="search-form__p">Choose sort options</p>
                 <input type="radio" name="search-radio" class="search-form__radio" id="radio1" value='byDate' checked>
@@ -25,7 +25,7 @@
                 <label for="radio2" class="search-form__label">By Importance</label>
 
                 <p class="search-form__p">State of progress</p>
-                <select name="select" id="select" class="search-form__select">
+                <select name="select" id="select" class="search-form__select" onchange="searchStart()">
                     <option value="all">All</option>
                     <option value="inProgress">In Progress</option>
                     <option value="done">Done</option>
@@ -35,9 +35,8 @@
 
         <main class="toDo">
             <div class="toDO__underline"></div>
-            <ul class="toDo__ul">
-
-            </ul>
+            <ul class="toDo__ul"></ul>
+            <button class="toDo__delete-all">Delete all</button>
         </main>
 
         <aside class="aside-content">
@@ -45,7 +44,7 @@
                 <h2 class="add-task__h2">Add your task</h2>
                 <form action="" class="add-task__form">
                     <input id="add-text" type="text" class="add-task__text-input" placeholder="Enter the task...">
-                    <p class="add-task__error">Error</p>
+                    <p class="add-task__error">Enter the task!</p>
                     <label for="add-checkbox" class="add-task__label">Select if task is important</label>
                     <input id="add-checkbox" type="checkbox" class="add-task__importance-input">
                     <button class="add-task__add-button">Add task</button>
@@ -67,10 +66,20 @@
             </div>
 
             <div class="color-select">
-                <div class="color-select__ligt"></div>
-                <div class="color-select__dark"></div>
+                <button class="color-select__ligt"><p class="color-select__text--light">LIGHT</p></button>
+                <button class="color-select__dark"><p class="color-select__text--dark">DARK</p></button>
             </div>
         </aside> 
+    </div>
+    <div class="popup">
+            <h3 class="popup__h">Edit choosen task</h3>
+            <div class="popup__underline"></div>
+            <form action="" class="popup__form"> 
+                <input type="text" class="popup__input" placeholder="Edit text...">
+                <p class="popup__error">Enter the task!</p>
+                <button class="popup__accept">Accept changes</button>
+            </form>
+            <button class="popup__cancel"><i class="fas fa-times"></i></button>
     </div>
     
     <script src="main.js"> </script>
